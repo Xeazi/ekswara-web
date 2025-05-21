@@ -1,16 +1,23 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   return (
-  <header className="bg-white shadow-lg py-4 w-full h-[88px] flex items-center justify-between px-8">
-      <div className="text-lg font-bold text-[var(--color-text)]">UrbanRayaJakarta</div>
-      <nav className="flex gap-6">
-        <Link to="/" className="text-[var(--color-text-light)] hover:text-[var(--color-text)]">Home</Link>
-        <Link to="/destination" className="text-[var(--color-text-light)] hover:text-[var(--color-text)]">Destination</Link>
-        <Link to="/event" className="text-[var(--color-text-light)] hover:text-[var(--color-text)]">Event</Link>
+    <header className="bg-white shadow-lg py-4 w-full h-[72px] flex items-center justify-between px-4 md:px-8">
+      <div className="text-lg font-bold text-[var(--color-text)]">
+        UrbanRayaJakarta
+      </div>
+      <nav className="flex gap-4 sm:gap-6 text-sm sm:text-base">
+        <Link to="/" className="text-[var(--color-text-light)] hover:text-[var(--color-text)] px-2 py-1">
+          Home
+        </Link>
+        <Link to="/destination" className="text-[var(--color-text-light)] hover:text-[var(--color-text)] px-2 py-1">
+          Destination
+        </Link>
+        <Link to="/event" className="text-[var(--color-text-light)] hover:text-[var(--color-text)] px-2 py-1">
+          Event
+        </Link>
       </nav>
     </header>
-  )
-}
-
+  );
+};
