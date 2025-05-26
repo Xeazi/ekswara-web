@@ -1,16 +1,14 @@
-export const DestinationCard = (props) => {
-    
-    const {
+export const DestinationCard = ({
         href,
         imageUrl,
         name,
         location,
         parkHours, // mungkin harus dikasih string format `${openingHour} to ${closingHour}`
-    } = props;
+    }) => {
 
-    return (
-        <a href={href}  className={`relative block mt-0 w-[480px] h-[440px]`}>
-            <div style={{backgroundImage: `url(${imageUrl.destinationImage})`}} className="bg-[length:100%_100%] bg-no-repeat bg-center rounded-2xl w-full h-full">
+    return ( 
+        <a href={href}  className={`relative block mt-0 max-w-[480px] aspect-[12/11]`}>
+            <div style={{backgroundImage: `url(${imageUrl})`}} className="bg-[length:100%_100%] bg-no-repeat bg-center rounded-2xl w-full h-full">
                 <div className="absolute bottom-0 w-full px-6 py-8">
                     <div className="flex flex-col gap-2.5 bg-white/80 rounded-2xl w-full px-3 pt-4 pb-10">
                         <h1 className="text-main text-2xl font-semibold">{name}</h1>
@@ -22,6 +20,8 @@ export const DestinationCard = (props) => {
         </a>
     ); 
 }
+
+// w-[480px] h-[440px]
 
 // size pake px buat sementara aja
 
