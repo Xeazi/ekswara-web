@@ -1,11 +1,7 @@
-export const DestinationPopularCard = (props) => {
-    const {
-        icon,
-        title,
-    } = props;
-
+export const DestinationPopularCard = ({icon, title}) => {
+  
     return (
-        <div className="flex flex-col items-center gap-4 bg-white rounded-2xl w-[180px] h-[200px] p-7 text-center">
+        <div className="flex flex-col items-center gap-4 bg-white w-[180px] rounded-2xl p-7 text-center">
             {icon}
             <p className="">{title}</p>
         </div>

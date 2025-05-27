@@ -6,6 +6,9 @@
   --color-secondary: #C4D9C5;
   --color-text: #05073C;
   --color-text-light: #1A1F6C; 
+  --color-text-gray: #717171; /* DetailsDetails */
+  --color-bulletpoint: #EFF7F1;
+  --color-garis: #E7E6E6;
 }
 
 #root {
