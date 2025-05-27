@@ -65,8 +65,6 @@ const allEventsData = [
   },
 ];
 
-
-
 // Komponen utama halaman event
 function EventPage() {
   // Inisialisasi default date range (Mei-Juni 2025)

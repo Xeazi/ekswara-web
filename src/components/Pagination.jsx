@@ -6,7 +6,6 @@ export const Pagination = ({ eventsPerPage, totalEvents, paginate, currentPage }
     for (let i = 1; i <= Math.ceil(totalEvents / eventsPerPage); i++) {
         pageNumbers.push(i);
     }
-
     if (pageNumbers.length <= 1) return null;
 
     return (

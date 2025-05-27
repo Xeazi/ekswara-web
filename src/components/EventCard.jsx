@@ -3,7 +3,6 @@ import { Button } from './Button';
 
 export const  EventCard = ({ event }) => {
     const isFree = event.price.toLowerCase() === "free";
-
     return (
         <div className="flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
         <img
