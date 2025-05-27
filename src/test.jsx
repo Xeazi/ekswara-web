@@ -4,9 +4,11 @@ import {Footer} from './components/footer.jsx'
 import {Header} from './components/header.jsx'
 
 import {DestinationCard} from './components/DestinationCard.jsx'
-import destinationImage from './assets/image/Taman Ismail Marzuki/Perpustakaan-Taman-Ismail-Marzuki-Cikini.jpg'
+import destinationImage from './assets/image/taman-ismail-marzuki/Perpustakaan-Taman-Ismail-Marzuki-Cikini.jpg';
 
 import {DestinationPopularCard} from './components/DestinationPopularCard.jsx'
+
+import { DetailImages } from './components/DetailsImages.jsx'
 
 import { StrictMode } from 'react'
 
@@ -42,6 +44,8 @@ function App() {
                 >
                 </DestinationPopularCard>
             </div>
+
+            <DetailImages></DetailImages>
             
             <Footer></Footer>
         </StrictMode>
