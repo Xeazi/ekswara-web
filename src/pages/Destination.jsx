@@ -126,7 +126,7 @@ function Destination() {
                             photo spots, find claming fun in green open spaces.
                         </p>
                     </div>
-                    <div className="shrink-0 grid grid-rows-2 grid-cols-3 gap-6 m-12">
+                    <div className="shrink-0 grid grid-rows-3 grid-cols-2 md:grid-rows-2 md:grid-cols-3 gap-6 m-12">
                         {popularThings.map((thing, index) => (
                             <DestinationPopularCard
                                 key={index}

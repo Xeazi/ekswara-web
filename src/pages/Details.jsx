@@ -14,6 +14,8 @@ function Details(/*{name, about, history, facilities, visitingInfo, maps }*/) {
 
     // sementara buat Details ini
 
+    const name = 'Taman Ismail Marzuki';
+
     const about = 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam rem eos aut fugit aliquam soluta maiores expedita, ullam sequi ipsum suscipit laudantium possimus quam iste ipsam est consequuntur modi totam illo nam incidunt quas necessitatibus inventore temporibus. Inventore fugiat laudantium dolor, quaerat officia cupiditate deleniti culpa excepturi dolorum, sunt iusto.';
 
     const history = 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam rem eos aut fugit aliquam soluta maiores expedita, ullam sequi ipsum suscipit laudantium possimus quam iste ipsam est consequuntur modi totam illo nam incidunt quas necessitatibus inventore temporibus. Inventore fugiat laudantium dolor, quaerat officia cupiditate deleniti culpa excepturi dolorum, sunt iusto.';
