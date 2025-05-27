@@ -298,13 +298,7 @@ function EventPage() {
                 {filteredEvents.length} results
               </p>
               <div className="relative">
-                <select className="text-sm text-gray-600 border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-green-500 appearance-none pr-8">
-                  <option>Featured</option>
-                  <option>Date (Newest)</option>
-                  <option>Date (Oldest)</option>
-                  <option>Price (Low to High)</option>
-                  <option>Price (High to Low)</option>
-                </select>
+                  <p className="text-text">Featured</p>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg
                     className="fill-current h-4 w-4"
