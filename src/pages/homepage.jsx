@@ -1,7 +1,7 @@
 import React from "react";
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
-import { Button } from "../components/button";
+import { Button } from "../components/Button";
 import { FeatureCard } from "../components/featureCard";
 import { RecommendComponent } from "../components/recommendComponent";
 import { GalleryWisata } from "../components/GalleryWisata";
@@ -133,7 +133,7 @@ const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.da
           ))}
         </div>
       </section>
-      <section className="mx-auto my-12 max-w-6xl px-4 h-[600px] mb-50">
+      <section className="mx-auto my-12 max-w-6xl h-[600px] mb-50">
         <div className="bg-secondary  rounded-lg grid grid-cols-1 md:grid-cols-2 overflow-hidden">
           <div className="flex flex-col justify-center px-8 py-12">
             <h2 className="text-3xl md:text-4xl font-bold text-text mb-4 leading-tight">
