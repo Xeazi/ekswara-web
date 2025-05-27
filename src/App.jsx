@@ -5,6 +5,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import Homepage from "./pages/Homepage";
 import EventPage from "./pages/EventPage";
+import Destination from "./pages/Destination"
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Homepage />} />
       <Route path="/event" element={<EventPage />} />
+      <Route path="/destination" element={<Destination />} />
     </Routes>
   );
 }
