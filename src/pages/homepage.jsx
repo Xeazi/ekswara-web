@@ -17,6 +17,8 @@ import cibugaryImage from "../assets/image/cibugary/CibugaryFarmWisataEdukasiCib
 import tamanTerbaik from "../assets/image/taman ismail/Taman Ismail Marzuki, Cikini.jpg"
 import { Link } from "react-router-dom";
 
+import { Chatbot } from "../components/Chatbot";
+
   
 function Homepage() {
   const events = [
@@ -159,6 +161,7 @@ const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.da
       <section>
           <GalleryWisata />
       </section>
+      <Chatbot />
       <Footer />
     </div>
   );
