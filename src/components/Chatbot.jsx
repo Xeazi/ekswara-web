@@ -30,7 +30,7 @@ export const Chatbot = () => {
 
                 <span className="font-bold">Ask Urbania</span>
 
-                <button onClick={() => setIsOpen(false)} className="ml-auto">✕</button>
+                <button onClick={() => setIsOpen(false)} className="ml-auto hover:font-extrabold">✕</button>
 
               </div>
 
@@ -60,9 +60,9 @@ export const Chatbot = () => {
 
             <button
               onClick={() => setIsOpen(true)}
-              className="w-14 h-14 bg-main text-white rounded-full shadow-lg flex items-center justify-center overflow-hidden"
+              className="w-14 h-14 bg-main text-white rounded-full shadow-lg flex items-center justify-center overflow-hidden hover:scale-125 transition ease-out active:scale-90"
             >
-              <img src={avatar} alt="🙍‍♀️" />
+              <img src={avatar} alt="🙍‍♀️" /> 
             </button>
           )}
         </div>
