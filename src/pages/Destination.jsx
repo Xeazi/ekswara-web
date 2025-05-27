@@ -13,7 +13,7 @@ function Destination() {
 
     const things = [
         {
-           href: '#',
+           href: '/Details',
            imageUrl: marzukiImage,
            name: 'Taman Ismail Marzuki',
            location: 'Central Jakarta',

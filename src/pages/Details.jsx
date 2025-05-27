@@ -4,13 +4,31 @@ import { DetailsDetails } from "../components/DetailsDetails";
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
 
-function Details({name, about, history, facilities, visitingInfo, maps}) {
+function Details(/*{name, about, history, facilities, visitingInfo, maps }*/) {
     
     // input:
 
     // facilities = array
     // visitingInfo = {address, transportation: [], openingHours}
     // maps = jujur gatau
+
+    // sementara buat Details ini
+
+    const about = 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam rem eos aut fugit aliquam soluta maiores expedita, ullam sequi ipsum suscipit laudantium possimus quam iste ipsam est consequuntur modi totam illo nam incidunt quas necessitatibus inventore temporibus. Inventore fugiat laudantium dolor, quaerat officia cupiditate deleniti culpa excepturi dolorum, sunt iusto.';
+
+    const history = 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam rem eos aut fugit aliquam soluta maiores expedita, ullam sequi ipsum suscipit laudantium possimus quam iste ipsam est consequuntur modi totam illo nam incidunt quas necessitatibus inventore temporibus. Inventore fugiat laudantium dolor, quaerat officia cupiditate deleniti culpa excepturi dolorum, sunt iusto.';
+    
+    const facilities = ['Teater Jakarta', 'Graha Bhakti Budaya', 'Cipta Galleries I, II, III', 'Prayer Room (Mushola) & Toilets', 'Jakarta Planetarium and Observatory', 'Jakarta Public Library', 'Jakarta Institute of the Arts (IKJ)'];
+
+    const visitingInfo = {
+        address: 'Jalan Cikina Raya No. 73, Menteng, Central Jakarta.',
+        transportation: [
+            'Commuter Line: Cikini Station, followed by a short walk or ride.',
+            'TransJakarta: Corridor 5H (Kampung Melayu - Tanah Abang) or 6H (Senen - Lebak Bulus).',
+            'MRT: Bundaran HI Station, then continue via online ride-hailing service.'
+        ],
+        openingHours: 'Daily, from 9 AM to 9 PM.'
+    };
 
     // sementara buat DetailsDetails
 

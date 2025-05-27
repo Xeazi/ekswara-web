@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const DestinationCard = ({
         href,
         imageUrl,
@@ -7,7 +9,7 @@ export const DestinationCard = ({
     }) => {
 
     return ( 
-        <a href={href}  className={`relative block mt-0 max-w-[480px] aspect-[12/11]`}>
+        <Link to={href}  className={`relative block mt-0 max-w-[480px] aspect-[12/11]`}>
             <div style={{backgroundImage: `url(${imageUrl})`}} className="bg-[length:100%_100%] bg-no-repeat bg-center rounded-2xl w-full h-full">
                 <div className="absolute bottom-0 w-full px-6 py-8">
                     <div className="flex flex-col gap-2.5 bg-white/80 rounded-2xl w-full px-3 pt-4 pb-10">
@@ -17,7 +19,7 @@ export const DestinationCard = ({
                     </div>
                 </div>
             </div>
-        </a>
+        </Link>
     ); 
 }
 
