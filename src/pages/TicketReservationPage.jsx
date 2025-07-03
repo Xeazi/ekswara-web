@@ -60,11 +60,7 @@ function ReservationPage() {
     }).format(number);
   };
   // Kalkulasi harga
-  const pricePerTicket = event
-    ? event.price.toLowerCase() === "free"
-      ? 0
-      : parseInt(event.price.replace(/[^0-9]/g, ""), 10)
-    : 0;
+  const pricePerTicket = event ? event.price : 0;
   const serviceFee = 6000;
   const subtotal = pricePerTicket * quantity;
   const total = subtotal + serviceFee;
@@ -183,11 +179,11 @@ function ReservationPage() {
               <div className="mb-6">
                 <img
                   src={event.image}
-                  alt={event.title}
+                  alt={event.name}
                   className="w-full h-48 object-cover rounded-lg mb-4"
                 />{" "}
                 <h3 className="font-bold text-text text-lg mb-1">
-                  {event.title.toUpperCase()}
+                  {event.name.toUpperCase()}
                 </h3>
                 <p className="text-sm text-text-gray">
                   {event.location} | Open {event.time}
@@ -206,9 +202,7 @@ function ReservationPage() {
                         Amount
                       </span>
                     </div>
-                    <p className="font-semibold text-text mb-1">
-                      {event.title}
-                    </p>
+                    <p className="font-semibold text-text mb-1">{event.name}</p>
                     <p className="text-sm text-text-gray">
                       {pricePerTicket === 0
                         ? "Free"
@@ -280,7 +274,7 @@ function ReservationPage() {
           </div>
         </div>
       </div>{" "}
-    <Footer />
+      <Footer />
     </div>
   );
 }

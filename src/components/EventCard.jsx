@@ -3,21 +3,49 @@ import { Link } from "react-router-dom";
 import { Button } from "./Button";
 
 export const EventCard = ({ event }) => {
-  const isFree = event.price.toLowerCase() === "free";
+  // Format harga untuk display
+  const formatPrice = (price) => {
+    if (price === 0) return "Free";
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(price);
+  };
+
+  const formattedPrice = formatPrice(event.price);
+  const isFree = event.price === 0;
+
+  // Status badge component
+  const getStatusBadge = (status) => {
+    const statusConfig = {
+      held: { label: "Berlangsung", color: "bg-green-100 text-[main]" }
+    };
+    return statusConfig[status] || statusConfig.held;
+  };
+
+  const statusBadge = getStatusBadge(event.status);
+
   return (
     <div className="flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
       <img
         src={event.image}
-        alt={event.title}
+        alt={event.name}
         className="w-full md:w-[270px] md:h-[270px] h-full object-cover flex-shrink-0"
       />
       <div className="p-5 flex flex-col justify-between flex-grow w-full">
         <div className="flex-grow mb-4">
-          <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide">
-            {event.location}
-          </p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs text-gray-500 uppercase tracking-wide">
+              {event.location}
+            </p>
+            <span
+              className={`px-2 py-1 rounded-full text-xs font-medium ${statusBadge.color}`}>
+              {statusBadge.label}
+            </span>
+          </div>
           <h3 className="text-xl lg:text-2xl font-bold text-text mb-2 hover:text-main transition-colors">
-            {event.title}
+            {event.name}
           </h3>
           <p className="text-sm text-gray-600 mb-3 leading-relaxed line-clamp-3">
             {event.description}
@@ -61,7 +89,7 @@ export const EventCard = ({ event }) => {
               className={`text-xl font-semibold mb-2 ${
                 isFree ? "text-text" : "text-gray-800"
               }`}>
-              {event.price}
+              {formattedPrice}
             </p>
             <Link
               to={`/ticket-reservation/${event.id}`}
