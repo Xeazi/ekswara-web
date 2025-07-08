@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./Button";
 
-export const EventCard = ({ event , image_url}) => {
+export const EventCard = ({ event }) => {
   // Format harga untuk display
   const formatPrice = (price) => {
     if (price === 0) return "Free";
@@ -29,7 +29,7 @@ export const EventCard = ({ event , image_url}) => {
   return (
     <div className="flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
       <img
-        src={image_url}
+        src={event.image}
         alt={event.name}
         className="w-full md:w-[270px] md:h-[270px] h-full object-cover flex-shrink-0"
       />
