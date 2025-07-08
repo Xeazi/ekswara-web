@@ -7,6 +7,15 @@ import { Button } from "../components/Button";
 import { EventCard } from "../components/EventCard";
 import { Pagination } from "../components/Pagination";
 
+import image1 from "../assets/image/events_temp/1.jpeg";
+import image2 from "../assets/image/events_temp/2.png";
+import image3 from "../assets/image/events_temp/3.jpg";
+import image4 from "../assets/image/events_temp/4.jpg";
+import image5 from "../assets/image/events_temp/5.png";
+import image6 from "../assets/image/events_temp/6.png";
+
+const images = [image1, image2, image3, image4, image5, image6];
+
 // Placeholder image untuk event yang tidak memiliki gambar spesifik
 const placeholderImg = "https://placehold.co/270x270/EBF5FF/7F9CF5?text=Event";
 
@@ -255,6 +264,7 @@ function EventPage() {
   }, [allEvents, parkFilters, dateRange]);
 
   return (
+    
     <div className="w-full bg-gray-50 min-h-screen">
       <Header />
       <div className="container mx-auto max-w-6xl px-4 py-8">
@@ -398,7 +408,7 @@ function EventPage() {
             ) : currentEvents.length > 0 ? (
               <div className="space-y-6">
                 {currentEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event.id} event={event} image_url={images[event.id - 1]}/>
                 ))}
               </div>
             ) : (

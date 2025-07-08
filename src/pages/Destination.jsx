@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
 
@@ -11,36 +14,51 @@ import suropatiImage from "../assets/image/Taman Suropati/gambar 1.webp"
 
 function Destination() {
 
-    const things = [
-        {
-           href: '/Details',
-           imageUrl: marzukiImage,
-           name: 'Taman Ismail Marzuki',
-           location: 'Central Jakarta',
-           parkHours: '09:00 to 21:00',
-        },
-        {
-           href: '#',
-           imageUrl: ferrisImage,
-           name: 'J-Sky FerrisWheel',
-           location: 'Central Jakarta',
-           parkHours: '10:00 - 22:00',
-        },
-        {
-           href: '#',
-           imageUrl: cibugaryImage,
-           name: 'Cibugary Farm',
-           location: 'Central Jakarta',
-           parkHours: '10:00 - 22:00',
-        },
-        {
-           href: '#',
-           imageUrl: suropatiImage,
-           name: 'Taman Suropati',
-           location: 'Central Jakarta',
-           parkHours: '06:30 - 17:00',
-        },
-    ];
+    const [things, setThings] = useState([]);
+
+    useEffect(() => {
+        async function fetchImages() {
+            
+            const res = await axios.get('http://localhost:3000/api/v1/destinations')
+            
+            setThings(res.data);
+
+        }
+
+        fetchImages();
+    }, []);
+
+
+    // const things = [
+    //     {
+    //        id: '/Details',
+    //        imageUrl: marzukiImage,
+    //        name: 'Taman Ismail Marzuki',
+    //        location: 'Central Jakarta',
+    //        parkHours: '09:00 to 21:00',
+    //     },
+    //     {
+    //        id: '#',
+    //        imageUrl: ferrisImage,
+    //        name: 'J-Sky FerrisWheel',
+    //        location: 'Central Jakarta',
+    //        parkHours: '10:00 - 22:00',
+    //     },
+    //     {
+    //        id: '#',
+    //        imageUrl: cibugaryImage,
+    //        name: 'Cibugary Farm',
+    //        location: 'Central Jakarta',
+    //        parkHours: '10:00 - 22:00',
+    //     },
+    //     {
+    //        id: '#',
+    //        imageUrl: suropatiImage,
+    //        name: 'Taman Suropati',
+    //        location: 'Central Jakarta',
+    //        parkHours: '06:30 - 17:00',
+    //     },
+    // ];
 
     const popularThings = [
         {

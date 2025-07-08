@@ -1,7 +1,9 @@
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
 import { Button } from "../components/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const mockEvents = [
   {
@@ -18,7 +20,48 @@ const mockEvents = [
 
 function AdminEvents() {
 
+    const [events, setEvents] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const {destinationId} = useParams();
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        async function fetchEvents() {
+            
+            try {
+                const token = localStorage.getItem('token');
+                const res = await axios.get(`http://localhost:3000/admin/api/v1/destinations/${destinationId}/events`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                }); 
+        
+                // untuk destination edit
+                // localStorage.setItem("eventsList", JSON.stringify(res.data)); 
+                
+                // ini alternatif gaperlu local storage
+                // navigate('/target', { state: data }); 
+                
+                setEvents(res.data);
+                console.log(res.data);
+
+                setLoading(false);
+
+            } catch (error) {
+                console.error(error);
+                // navigate('../admin/login');
+            }
+
+        }
+        
+        fetchEvents();
+        
+    }, []);
+
+    if (loading) return <p>Loading...</p>
+    if (!events) return <p>events not found.</p>
 
   return (
     <div className="min-h-screen bg-white  items-center">

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -23,14 +24,18 @@ function AdminEventEdit() {
     formData.append('picture', selectedImage);
 
     try {
-      const res = await fetch('http://localhost:3000/admin/api/v1/events/create', {
-        method: 'POST',
-        body: formData
-      });
-      const result = await res.json();
-      console.log(result);
+        const token = localStorage.getItem('token');
+        const res = await axios.post('http://localhost:3000/admin/api/v1/events/create', formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        }); 
+        
+        console.log(res.data);
+
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
   };
 
