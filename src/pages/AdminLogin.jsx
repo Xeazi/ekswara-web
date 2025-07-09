@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 function AdminLogin() {
@@ -19,7 +19,7 @@ function AdminLogin() {
 
             localStorage.setItem("token", response.data.token);
 
-            navigate("../admin/destinations/1/events"); 
+            navigate("../admin/destinations"); 
         } catch (error) {
             console.error('Login Failed:', error.response?.data || error.message);
         }
@@ -42,7 +42,6 @@ function AdminLogin() {
                   placeholder="johndoe"
                   className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none"
                 />
-                <span className="absolute right-3 top-2.5 text-gray-400 text-sm">📧</span>
                 {errors.username && <p className="text-red-500 text-xs mt-1">Username is required</p>}
               </div>
 
@@ -54,7 +53,6 @@ function AdminLogin() {
                   placeholder="********"
                   className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none"
                 />
-                <span className="absolute right-3 top-2.5 text-gray-400 text-sm">👁️</span>
                 {errors.password && <p className="text-red-500 text-xs mt-1">Password is required</p>}
               </div>
 

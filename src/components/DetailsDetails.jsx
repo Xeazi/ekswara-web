@@ -55,12 +55,11 @@ export const DetailsDetails = ({durationOfVisit, groupSize, ages, languages}) =>
                         Languages
                     </p>
                     <p className="text-text-gray">
-                        {languages}
+                        {languages.join(', ')}
                     </p>
                 </div>
             </div>
 
         </div>
     );
-
 }

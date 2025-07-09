@@ -4,40 +4,55 @@ import { DetailsDetails } from "../components/DetailsDetails";
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
 
-function Details(/*{name, about, history, facilities, visitingInfo, maps }*/) {
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+function Details() {    
     
-    // input:
+    const {destinationId} = useParams();
 
-    // facilities = array
-    // visitingInfo = {address, transportation: [], openingHours}
-    // maps = jujur gatau
+    const [details, setDetails] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    // sementara buat Details ini
+    useEffect(() => {
+        async function fetchDetails() {
+            
+            try {
+                const res = await axios.get(`http://localhost:3000/api/v1/destinations/${destinationId}`);
+                
+                setDetails(res.data);
     
-    const name = 'Taman Ismail Marzuki';
+                console.log(res.data);
+                setLoading(false);
+                
+            } catch (error) {
+                console.error(error);
+                setLoading(false);
+            }
+                
+        }
+        
+        fetchDetails();
+        
+    }, [destinationId]);
 
-    const about = 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam rem eos aut fugit aliquam soluta maiores expedita, ullam sequi ipsum suscipit laudantium possimus quam iste ipsam est consequuntur modi totam illo nam incidunt quas necessitatibus inventore temporibus. Inventore fugiat laudantium dolor, quaerat officia cupiditate deleniti culpa excepturi dolorum, sunt iusto.';
+    if (loading) return <p>Loading...</p>;
+    if (!details) return <p>Details not found.</p>;
 
-    const history = 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam rem eos aut fugit aliquam soluta maiores expedita, ullam sequi ipsum suscipit laudantium possimus quam iste ipsam est consequuntur modi totam illo nam incidunt quas necessitatibus inventore temporibus. Inventore fugiat laudantium dolor, quaerat officia cupiditate deleniti culpa excepturi dolorum, sunt iusto.';
-    
-    const facilities = ['Teater Jakarta', 'Graha Bhakti Budaya', 'Cipta Galleries I, II, III', 'Prayer Room (Mushola) & Toilets', 'Jakarta Planetarium and Observatory', 'Jakarta Public Library', 'Jakarta Institute of the Arts (IKJ)'];
+    const {
+        name,
+        about,
+        history,
+        facilities,
+        visiting_info,
+        duration_of_visit,
+        group_size,
+        ages,
+        languages,
+        map_url
+    } = details;
 
-    const visitingInfo = {
-        address: 'Jalan Cikina Raya No. 73, Menteng, Central Jakarta.',
-        transportation: [
-            'Commuter Line: Cikini Station, followed by a short walk or ride.',
-            'TransJakarta: Corridor 5H (Kampung Melayu - Tanah Abang) or 6H (Senen - Lebak Bulus).',
-            'MRT: Bundaran HI Station, then continue via online ride-hailing service.'
-        ],
-        openingHours: 'Daily, from 9 AM to 9 PM.'
-    };
-
-    // sementara buat DetailsDetails
-
-    const durationOfVisit = '± 2-3 Hours';
-    const groupSize = 'Max. 15 people';
-    const ages = '18-50 years';
-    const languages = 'Indonesian, English'
 
     return (
         <div className="w-full text-text *:space-y-6">
@@ -50,7 +65,7 @@ function Details(/*{name, about, history, facilities, visitingInfo, maps }*/) {
                     {name}
                 </h2>
                 <DetailImages />
-                <DetailsDetails durationOfVisit={durationOfVisit} groupSize={groupSize} ages={ages} languages={languages} />
+                <DetailsDetails durationOfVisit={duration_of_visit} groupSize={group_size} ages={ages} languages={languages} />
 
             </section>
 
@@ -59,7 +74,7 @@ function Details(/*{name, about, history, facilities, visitingInfo, maps }*/) {
                 <h2 className="text-3xl font-bold">
                     About The Park
                 </h2>
-                <p className="">
+                <p className="max-w-[90ch]">
                     {about}
                 </p>
                 <h3 className="text-2xl">
@@ -102,14 +117,14 @@ function Details(/*{name, about, history, facilities, visitingInfo, maps }*/) {
                     <span className="font-bold">
                         Address: {' '}
                     </span>
-                    {visitingInfo.address}
+                    {visiting_info.address}
                 </p>
 
                 <p className="font-bold">
                     Public Transportation: {' '}
                 </p>
-                <ul className="list-disc pl-8">
-                    {visitingInfo.transportation.map((item, index) => (
+                <ul className="list-disc pl-8 max-w-[90ch] leading-[4ch]">
+                    {visiting_info.transportation.map((item, index) => (
                         <li key={index}>
                             {item}
                         </li>
@@ -120,7 +135,7 @@ function Details(/*{name, about, history, facilities, visitingInfo, maps }*/) {
                     <span className="font-bold">
                         Opening Hours: {' '}
                     </span>
-                    {visitingInfo.openingHours}
+                    {visiting_info.openingHours}
                 </p>
 
             </section>
@@ -129,11 +144,18 @@ function Details(/*{name, about, history, facilities, visitingInfo, maps }*/) {
                 <h2 className="text-3xl font-bold">
                     Maps
                 </h2>
-
-                {/* kurtau maps disini sih seharusnya apalah gitu yang seperti itu */}
+                    
+                <iframe
+                src={map_url}
+                width="100%"
+                height="450"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                title="Google Map - Taman Ismail Marzuki"
+                />
 
             </section>
-
             <Footer />
         </div>
     )
