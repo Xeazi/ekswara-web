@@ -16,6 +16,44 @@ export const Chatbot = () => {
 </svg>);
     
     const [isOpen, setIsOpen] = useState(false);
+    const [input, setInput] = useState("");
+    const [messages, setMessages] = useState([
+      { sender: "bot", text: "Halo! Ada yang bisa saya bantu?" }
+    ]);
+    const [loading, setLoading] = useState(false);
+
+    const handleSend = async () => {
+      if (!input.trim()) return;
+      const userMessage = { sender: "user", text: input };
+      setMessages((prev) => [...prev, userMessage]);
+      setInput("");
+      setLoading(true);
+      try {
+        const res = await fetch("https://devinfaiz-chatbot.hf.space/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: input })
+        });
+        const data = await res.json();
+        setMessages((prev) => [
+          ...prev,
+          { sender: "bot", text: data.response || "Maaf, saya tidak mengerti." }
+        ]);
+      } catch (err) {
+        setMessages((prev) => [
+          ...prev,
+          { sender: "bot", text: "Maaf, terjadi kesalahan. Silakan coba lagi." }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const handleInputKeyDown = (e) => {
+      if (e.key === "Enter" && !loading) {
+        handleSend();
+      }
+    };
 
     return (
         <div className="fixed bottom-6 right-6 z-1">
@@ -35,23 +73,35 @@ export const Chatbot = () => {
               </div>
 
               <div className="flex-1 p-4 overflow-y-auto text-sm">
-
-                <p className="relative bg-white p-4 pb-6 rounded-md shadow-sm">
-                    Halo! Lorem ipsum der amet something engga hafal aku
-                    <span className="absolute bottom-2 right-4 text-gray-500">18:28</span>
-                </p>
-
+                {messages.map((msg, idx) => (
+                  <div key={idx} className={`mb-2 flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+                    <div className={`rounded-md px-3 py-2 max-w-[80%] shadow-sm ${msg.sender === "user" ? "bg-main text-white" : "bg-white text-text"}`}>
+                      {msg.text}
+                    </div>
+                  </div>
+                ))}
+                {loading && (
+                  <div className="mb-2 flex justify-start">
+                    <div className="rounded-md px-3 py-2 bg-white text-text max-w-[80%] shadow-sm opacity-70 italic">Sedang mengetik...</div>
+                  </div>
+                )}
               </div>
 
               <div className="flex p-4 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
 
                 <input
                   type="text"
-                  placeholder="Type your message..."
+                  placeholder="Tulis pertanyaan..."
                   className="w-full p-2 text-sm outline-0"
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleInputKeyDown}
+                  disabled={loading}
                 />
 
-                {sendIcon}
+                <button onClick={handleSend} disabled={loading || !input.trim()} className="ml-2">
+                  {sendIcon}
+                </button>
 
               </div>
             </div>
@@ -67,5 +117,4 @@ export const Chatbot = () => {
           )}
         </div>
   );
-
 }
