@@ -3,38 +3,16 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
-function AdminCreateEdit() {
-
-  const event = JSON.parse(localStorage.getItem('event'));
-  
-  const {
-    name,
-    date,
-    time,
-    description,
-    price,
-    category_value,
-    status_value,
-  } = event;
-
+function AdminEventCreate() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      name,
-      date: date.split("T")[0],
-      time,
-      description,
-      price: parseInt(price),
-      expiredDate: date.split("T")[0],
-    },
-  });    
+  } = useForm();    
 
   const [selectedImage, setSelectedImage] = useState(null);
-  const [category, setCategory] = useState(category_value);
-  const [status, setStatus] = useState(status_value); // dua2nya gabisa
+  const [category, setCategory] = useState("");
+  const [status, setStatus] = useState("");
 
   const navigate = useNavigate();
 
@@ -57,8 +35,8 @@ function AdminCreateEdit() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(
-        `http://localhost:3000/admin/api/v1/destinations/${destinationId}/events/${event.id}/update`,
+      const res = await axios.post(
+        `http://localhost:3000/admin/api/v1/destinations/${destinationId}/events/create`,
         formData,
         {
           headers: {
@@ -68,7 +46,7 @@ function AdminCreateEdit() {
         }
       );
 
-      alert('Event successfully edited!');
+      alert('Event successfully created!');
 
       navigate(-1)
 
@@ -79,7 +57,6 @@ function AdminCreateEdit() {
       }
     }
   };
-
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] flex flex-col items-center">
@@ -95,7 +72,7 @@ function AdminCreateEdit() {
       </div>
 
       <h2 className="mt-10 text-2xl font-bold text-blue-900">
-        Edit Event
+        Create New Event
       </h2>
 
       <form
@@ -110,7 +87,6 @@ function AdminCreateEdit() {
           {...register("name", { required: "Name is required" })}
           className="form-input w-full mb-1 mt-1 border rounded px-3 py-2"
           placeholder={username + "'s Event"}
-          defaultValue={name}
         />
         {errors.name && (
           <p className="text-red-500 text-sm mb-2">{errors.name.message}</p>
@@ -137,7 +113,6 @@ function AdminCreateEdit() {
               {...register("date", { required: "Date is required" })}
               type="date"
               className="form-input w-full mb-1 mt-1 border rounded px-3 py-2"
-              defaultValue={date}
             />
             {errors.date && (
               <p className="text-red-500 text-sm mb-2">{errors.date.message}</p>
@@ -158,7 +133,6 @@ function AdminCreateEdit() {
               type="text"
               className="form-input w-full mb-1 mt-1 border rounded px-3 py-2"
               placeholder="00:00-00:00"
-              defaultValue={time}
             />
             {errors.time && (
               <p className="text-red-500 text-sm mb-2">{errors.time.message}</p>
@@ -173,7 +147,6 @@ function AdminCreateEdit() {
           {...register("expiredDate", { required: "Expired date is required" })}
           type="date"
           className="form-input w-full mb-1 mt-1 border rounded px-3 py-2"
-          defaultValue={date}
         />
         {errors.expiredDate && (
           <p className="text-red-500 text-sm mb-2">
@@ -182,15 +155,18 @@ function AdminCreateEdit() {
         )}
 
         <label className="block text-sm font-medium text-gray-700">
-          Optional - Insert image to update current image
+          Picture Event
         </label>
-        <input
+        <input required
           type="file"
           name="image"
           accept="image/*"
           className="form-input w-full mb-1 mt-1"
           onChange={(e) => setSelectedImage(e.target.files[0])}
         />
+        {!selectedImage && (
+          <p className="text-red-500 text-sm mb-2">Image is required</p>
+        )}
 
         <label className="block text-sm font-medium text-gray-700">
           Description Event
@@ -199,7 +175,6 @@ function AdminCreateEdit() {
           {...register("description", { required: "Description is required" })}
           rows={3}
           className="form-textarea w-full mb-1 mt-1 border rounded px-3 py-2"
-          defaultValue={description}
         />
         {errors.description && (
           <p className="text-red-500 text-sm mb-2">
@@ -219,7 +194,6 @@ function AdminCreateEdit() {
           type="number"
           className="form-input w-full mb-1 mt-1 border rounded px-3 py-2"
           placeholder="(Rupiah)"
-          defaultValue={price}
         />
         {errors.price && (
           <p className="text-red-500 text-sm mb-2">{errors.price.message}</p>
@@ -235,7 +209,6 @@ function AdminCreateEdit() {
                 type="radio"
                 name="category"
                 value={val}
-                // defaultChecked={category_value === val}
                 checked={category === val}
                 onChange={() => setCategory(val)}
                 className="form-radio text-green-600"
@@ -256,7 +229,6 @@ function AdminCreateEdit() {
                 type="radio"
                 name="status"
                 value={val}
-                // defaultChecked={status_value === val}
                 checked={status === val}
                 onChange={() => setStatus(val)}
                 className="form-radio text-green-600"
@@ -279,7 +251,7 @@ function AdminCreateEdit() {
             type="submit"
             className="px-6 py-2 bg-green-700 text-white rounded hover:bg-green-800"
           >
-            Save
+            Create Event
           </button>
         </div>
       </form>
@@ -291,4 +263,4 @@ function AdminCreateEdit() {
   );
 }
 
-export default AdminCreateEdit;
+export default AdminEventCreate;

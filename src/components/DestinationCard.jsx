@@ -10,7 +10,7 @@ export const DestinationCard = ({
 
     return ( 
         <Link to={`./${id}`}  className={`relative block mt-0 max-w-[480px] aspect-[12/11]`}>
-            <div style={{backgroundImage: `url(${image_url})`}} className="bg-[length:100%_100%] bg-no-repeat bg-center rounded-2xl w-full h-full">
+            <div style={{backgroundImage: `url(http://localhost:3000${image_url})`}} className="bg-[length:100%_100%] bg-no-repeat bg-center rounded-2xl w-full h-full">
                 <div className="absolute bottom-0 w-full px-6 py-8">
                     <div className="flex flex-col gap-2.5 bg-white/80 rounded-2xl w-full px-3 pt-4 pb-10">
                         <h1 className="text-main text-2xl font-semibold">{name}</h1>
