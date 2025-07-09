@@ -255,6 +255,7 @@ function EventPage() {
   }, [allEvents, parkFilters, dateRange]);
 
   return (
+    
     <div className="w-full bg-gray-50 min-h-screen">
       <Header />
       <div className="container mx-auto max-w-6xl px-4 py-8">

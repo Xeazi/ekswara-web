@@ -10,23 +10,37 @@ import RecommendationPage from "./pages/RecommendationPage";
 
 import AdminLogin from "./pages/AdminLogin";
 import AdminEvents from "./pages/AdminEvents";
+import AdminEventCreate from "./pages/AdminEventCreate";
 import AdminEventEdit from "./pages/AdminEventEdit";
+import AdminDestinations from "./pages/AdminDestinations";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Homepage />} />
+      
       <Route path="/event" element={<EventPage />} />
+      
       <Route path="/destination" element={<Destination />} />
+      <Route path="/destination/:destinationId" element={<Details />} />
+      
       <Route path="/details" element={<Details />} />
+      
       <Route
         path="/ticket-reservation/:eventId"
         element={<TicketReservationPage />}
       />
 
+
+
+      <Route path="/admin/destinations" element={<AdminDestinations />} />
+
       <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin/destinations/1/events" element={<AdminEvents />} />
-      <Route path="/admin/destinations/1/events/new" element={<AdminEventEdit />} />
+
+      <Route path="/admin/destinations/:destinationId" element={<AdminEvents />} />
+
+      <Route path="/admin/destinations/:destinationId/new" element={<AdminEventCreate />} />
+      <Route path="/admin/destinations/:destinationId/:eventId" element={<AdminEventEdit />} />
 
       <Route path="/recommendation" element={<RecommendationPage />} />
 

@@ -29,7 +29,7 @@ export const EventCard = ({ event }) => {
   return (
     <div className="flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
       <img
-        src={event.image}
+        src={`http://localhost:3000${event.image}`}
         alt={event.name}
         className="w-full md:w-[270px] md:h-[270px] h-full object-cover flex-shrink-0"
       />

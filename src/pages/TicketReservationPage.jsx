@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation, Link } from "react-router-dom";
+import { useParams, useLocation, Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
+require("dotenv").config();
 
 // icon
 const PlusIcon = () => (
@@ -35,9 +37,30 @@ const MinusIcon = () => (
 function ReservationPage() {
   const { eventId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [event, setEvent] = useState(null);
   const [quantity, setQuantity] = useState(2);
   const [loading, setLoading] = useState(true);
+  const [customerName, setCustomerName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [paymentResult, setPaymentResult] = useState(null);
+
+  
+  // Load Midtrans Snap script
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+    script.setAttribute("data-client-key", "MIDTRANS_CLIENT_KEY"); // Client key dari .env
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
   useEffect(() => {
     // Ambil data event dari state yang dikirim melalui Link
@@ -64,6 +87,110 @@ function ReservationPage() {
   const serviceFee = 6000;
   const subtotal = pricePerTicket * quantity;
   const total = subtotal + serviceFee;
+
+  // Fungsi untuk menangani pembayaran Midtrans
+  const handleMidtransPay = async () => {
+    // Clear previous errors
+    setError("");
+    setSuccess(false);
+
+    if (!customerName || !customerEmail) {
+      setError("Please fill in your Full Name and Email.");
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      const orderId = `ticket-${event.id}-${Date.now()}`;
+
+      // Buat array items untuk Midtrans
+      const items = [
+        {
+          id: `ticket-${event.id}`,
+          price: pricePerTicket,
+          quantity: quantity,
+          name: event.name,
+        },
+      ];
+
+      // Tambahkan service fee jika ada
+      if (serviceFee > 0) {
+        items.push({
+          id: "service-fee",
+          price: serviceFee,
+          quantity: 1,
+          name: "Service Fee",
+        });
+      }
+
+      console.log("Sending payment request:", {
+        orderId,
+        grossAmount: total,
+        customerName,
+        customerEmail,
+        customerPhone,
+        items,
+      });
+
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/payments/midtrans/transaction",
+        {
+          orderId,
+          grossAmount: total,
+          customerName,
+          customerEmail,
+          customerPhone,
+          items,
+        }
+      );
+
+      const { token } = response.data;
+
+      console.log("Received token:", token);
+
+      // Gunakan token untuk membuka Snap payment window
+      if (window.snap) {
+        window.snap.pay(token, {
+          onSuccess: function (result) {
+            console.log("Payment success:", result);
+            setPaymentResult(result);
+            setSuccess(true);
+            setIsProcessing(false);
+            
+            // Redirect to event page after 3 seconds
+            setTimeout(() => {
+              navigate("/event");
+            }, 3000);
+          },
+          onPending: function (result) {
+            console.log("Payment pending:", result);
+            setError("Payment is pending. Please check your payment status.");
+            setIsProcessing(false);
+          },
+          onError: function (result) {
+            console.log("Payment error:", result);
+            setError("Payment failed. Please try again.");
+            setIsProcessing(false);
+          },
+          onClose: function () {
+            console.log("Payment popup closed");
+            setIsProcessing(false);
+          },
+        });
+      } else {
+        setError("Midtrans Snap is not loaded. Please refresh the page.");
+        setIsProcessing(false);
+      }
+    } catch (error) {
+      console.error("Midtrans payment failed:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to create Midtrans transaction.";
+      setError(`Payment failed: ${errorMessage}`);
+      setIsProcessing(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -93,13 +220,73 @@ function ReservationPage() {
     );
   }
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen relative">
+      {/* Loading overlay */}
+      {isProcessing && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-main mx-auto mb-4"></div>
+            <p className="text-lg font-medium">Processing Payment...</p>
+            <p className="text-sm text-gray-600 mt-2">Please wait while we process your payment</p>
+          </div>
+        </div>
+      )}
+
       <Header />
       <div className="bg-yellow-400 py-3 text-center">
         <p className="text-text font-medium">
           Complete your order details immediately!
         </p>
       </div>
+
+      {/* Success Message */}
+      {success && (
+        <div className="max-w-6xl mx-auto px-4 mt-4">
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <h3 className="font-bold">Payment Successful!</h3>
+                  <p className="text-sm">Your ticket reservation has been confirmed. Redirecting to events page in 3 seconds...</p>
+                </div>
+              </div>
+              <button
+                onClick={() => navigate("/event")}
+                className="ml-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+              >
+                Go to Events
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="max-w-6xl mx-auto px-4 mt-4">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+            <div className="flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <h3 className="font-bold">Payment Error</h3>
+                <p className="text-sm">{error}</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setError("")}
+              className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Konten utama */}
       <div className="max-w-6xl mx-auto py-12 px-4">
         <h1 className="text-4xl font-bold text-center text-text mb-12">
@@ -124,7 +311,21 @@ function ReservationPage() {
                   <input
                     type="text"
                     id="fullName"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-main focus:border-main"
+                    value={customerName}
+                    onChange={(e) => {
+                      setCustomerName(e.target.value);
+                      if (error && !e.target.value) {
+                        // Keep error if field is still empty
+                      } else if (error && error.includes("Full Name")) {
+                        setError(""); // Clear error when user starts typing
+                      }
+                    }}
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-main focus:border-main ${
+                      error && error.includes("Full Name") && !customerName
+                        ? "border-red-500 bg-red-50"
+                        : "border-gray-300"
+                    }`}
+                    placeholder="Enter your full name"
                   />
                 </div>{" "}
                 <div>
@@ -153,7 +354,21 @@ function ReservationPage() {
                   <input
                     type="email"
                     id="email"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-main focus:border-main"
+                    value={customerEmail}
+                    onChange={(e) => {
+                      setCustomerEmail(e.target.value);
+                      if (error && !e.target.value) {
+                        // Keep error if field is still empty
+                      } else if (error && error.includes("Email")) {
+                        setError(""); // Clear error when user starts typing
+                      }
+                    }}
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-main focus:border-main ${
+                      error && error.includes("Email") && !customerEmail
+                        ? "border-red-500 bg-red-50"
+                        : "border-gray-300"
+                    }`}
+                    placeholder="Enter your email address"
                   />
                 </div>
                 <div>
@@ -165,7 +380,10 @@ function ReservationPage() {
                   <input
                     type="tel"
                     id="phone"
+                    value={customerPhone}
+                    onChange={(e) => setCustomerPhone(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-main focus:border-main"
+                    placeholder="Enter your phone number"
                   />
                 </div>
               </form>
@@ -178,7 +396,7 @@ function ReservationPage() {
               {/* Event Image dan Info */}
               <div className="mb-6">
                 <img
-                  src={event.image}
+                  src={`http://localhost:3000${event.image}`}
                   alt={event.name}
                   className="w-full h-48 object-cover rounded-lg mb-4"
                 />{" "}
@@ -266,8 +484,11 @@ function ReservationPage() {
                     {formatCurrency(total)}
                   </span>
                 </div>
-                <button className="w-full bg-main text-white font-bold py-3 rounded-lg hover:bg-secondary hover:text-text transition-colors">
-                  Order Now
+                <button
+                  onClick={handleMidtransPay}
+                  disabled={isProcessing}
+                  className="w-full bg-main text-white font-bold py-3 rounded-lg hover:bg-secondary hover:text-text transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
+                  {isProcessing ? "Processing..." : "Order Now"}
                 </button>
               </div>
             </div>
