@@ -3,7 +3,6 @@ import { useParams, useLocation, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
-require("dotenv").config();
 
 // icon
 const PlusIcon = () => (
@@ -44,17 +43,22 @@ function ReservationPage() {
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [visitDate, setVisitDate] = useState(
+    new Date().toISOString().split("T")[0]
+  ); // Default to today
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [paymentResult, setPaymentResult] = useState(null);
 
-  
   // Load Midtrans Snap script
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
-    script.setAttribute("data-client-key", "MIDTRANS_CLIENT_KEY"); // Client key dari .env
+    script.setAttribute(
+      "data-client-key",
+      import.meta.env.VITE_MIDTRANS_CLIENT_KEY
+    );
     document.head.appendChild(script);
 
     return () => {
@@ -130,17 +134,25 @@ function ReservationPage() {
         customerName,
         customerEmail,
         customerPhone,
+        eventId: event.id,
+        visitDate: new Date().toISOString().split("T")[0],
+        ticketQuantity: quantity,
+        eventTime: event.time || "09:00 - 17:00",
         items,
       });
 
       const response = await axios.post(
-        "http://localhost:3000/api/v1/payments/midtrans/transaction",
+        `${import.meta.env.VITE_API_BASE_URL}/payments/midtrans/transaction`,
         {
           orderId,
           grossAmount: total,
           customerName,
           customerEmail,
           customerPhone,
+          eventId: event.id,
+          visitDate: visitDate,
+          ticketQuantity: quantity,
+          eventTime: event.time || "09:00 - 17:00",
           items,
         }
       );
@@ -152,12 +164,40 @@ function ReservationPage() {
       // Gunakan token untuk membuka Snap payment window
       if (window.snap) {
         window.snap.pay(token, {
-          onSuccess: function (result) {
+          onSuccess: async function (result) {
             console.log("Payment success:", result);
             setPaymentResult(result);
             setSuccess(true);
             setIsProcessing(false);
-            
+
+            // Kirim email tiket otomatis setelah pembayaran berhasil
+            try {
+              const ticketData = {
+                orderID: orderId,
+                customerName,
+                customerEmail,
+                destination: event.name,
+                visitDate: new Date().toLocaleDateString("id-ID"),
+                ticketQuantity: quantity,
+                eventTime: "09:00 - 17:00", // Bisa disesuaikan dengan data event
+                totalPrice: total,
+                eventName: event.name,
+                eventDescription: event.description || "",
+              };
+
+              console.log("Sending ticket email...");
+              await axios.post(
+                `${
+                  import.meta.env.VITE_API_BASE_URL
+                }/payments/send-ticket-email`,
+                ticketData
+              );
+              console.log("Ticket email sent successfully");
+            } catch (emailError) {
+              console.error("Failed to send ticket email:", emailError);
+              // Jangan gagalkan success flow jika email gagal
+            }
+
             // Redirect to event page after 3 seconds
             setTimeout(() => {
               navigate("/event");
@@ -227,66 +267,80 @@ function ReservationPage() {
           <div className="bg-white p-6 rounded-lg text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-main mx-auto mb-4"></div>
             <p className="text-lg font-medium">Processing Payment...</p>
-            <p className="text-sm text-gray-600 mt-2">Please wait while we process your payment</p>
+            <p className="text-sm text-gray-600 mt-2">
+              Please wait while we process your payment
+            </p>
           </div>
         </div>
       )}
-
       <Header />
       <div className="bg-yellow-400 py-3 text-center">
         <p className="text-text font-medium">
           Complete your order details immediately!
         </p>
       </div>
-
       {/* Success Message */}
       {success && (
         <div className="max-w-6xl mx-auto px-4 mt-4">
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <div>
                   <h3 className="font-bold">Payment Successful!</h3>
-                  <p className="text-sm">Your ticket reservation has been confirmed. Redirecting to events page in 3 seconds...</p>
+                  <p className="text-sm">
+                    Your ticket reservation has been confirmed. A ticket email
+                    has been sent to {customerEmail}. Redirecting to events page
+                    in 3 seconds...
+                  </p>
                 </div>
               </div>
               <button
                 onClick={() => navigate("/event")}
-                className="ml-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
-              >
+                className="ml-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium">
                 Go to Events
               </button>
             </div>
           </div>
         </div>
       )}
-
       {/* Error Message */}
       {error && (
         <div className="max-w-6xl mx-auto px-4 mt-4">
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
             <div className="flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
               </svg>
               <div>
                 <h3 className="font-bold">Payment Error</h3>
                 <p className="text-sm">{error}</p>
               </div>
             </div>
-            <button 
+            <button
               onClick={() => setError("")}
-              className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
-            >
+              className="mt-2 text-sm text-red-600 hover:text-red-800 underline">
               Dismiss
             </button>
           </div>
         </div>
       )}
-
       {/* Konten utama */}
       <div className="max-w-6xl mx-auto py-12 px-4">
         <h1 className="text-4xl font-bold text-center text-text mb-12">
