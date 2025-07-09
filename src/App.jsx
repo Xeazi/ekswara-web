@@ -6,6 +6,7 @@ import EventPage from "./pages/EventPage";
 import Destination from "./pages/Destination";
 import Details from "./pages/Details";
 import TicketReservationPage from "./pages/TicketReservationPage";
+import RecommendationPage from "./pages/RecommendationPage";
 
 import AdminLogin from "./pages/AdminLogin";
 import AdminEvents from "./pages/AdminEvents";
@@ -26,6 +27,8 @@ function App() {
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/destinations/1/events" element={<AdminEvents />} />
       <Route path="/admin/destinations/1/events/new" element={<AdminEventEdit />} />
+
+      <Route path="/recommendation" element={<RecommendationPage />} />
 
     </Routes>
   );

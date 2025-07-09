@@ -17,6 +17,9 @@ export const Header = () => {
         <Link to="/event" className="text-[var(--color-text-light)] hover:text-[var(--color-text)] px-2 py-1">
           Event
         </Link>
+        <Link to="/recommendation" className="text-[var(--color-text-light)] hover:text-[var(--color-text)] px-2 py-1">
+          Rekomendasi
+        </Link>
       </nav>
     </header>
   );
