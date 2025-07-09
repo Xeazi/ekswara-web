@@ -450,7 +450,7 @@ function ReservationPage() {
               {/* Event Image dan Info */}
               <div className="mb-6">
                 <img
-                  src={event.image}
+                  src={`http://localhost:3000${event.image}`}
                   alt={event.name}
                   className="w-full h-48 object-cover rounded-lg mb-4"
                 />{" "}

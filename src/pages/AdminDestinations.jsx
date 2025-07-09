@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Footer } from "../components/footer";
 import { Header } from "../components/header";
 
@@ -8,7 +8,7 @@ function AdminDestination({destinationId, name, img_url}) {
     return (
         <Link to={'./' + destinationId}>
             <div className="flex w-full gap-6 text-text hover:bg-gray-200 shadow-2xl rounded-xl border-main border-2 items-center">
-                <div className="h-[244px] w-[244px]">
+                <div className="h-[244px] w-[244px] bg-gray-300 m-4 rounded-2xl">
                     <img src={img_url} alt={"gambar " + name} />
                 </div>
                 <div>
@@ -28,6 +28,10 @@ function AdminDestinations() {
     const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
+
+    const location = useLocation();
+
+    const username = localStorage.getItem('username');
 
     useEffect(() => {
         async function fetchDestinations() {
@@ -69,6 +73,13 @@ function AdminDestinations() {
         <div className="w-full">
 
             <Header />
+
+            <div className="w-full bg-green-700 text-white px-10 py-6 flex items-center gap-4">
+                <div className="bg-white text-green-700 rounded-full w-14 h-14 flex items-center justify-center text-3xl">
+                  👤
+                </div>
+                <h2 className="text-xl font-semibold">{username}</h2>
+            </div>
 
             <section className="min-h-220 my-12 mx-auto w-full max-w-6xl">
                 {destinations.map((destination) => (

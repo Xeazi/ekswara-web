@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 function AdminLogin() {
@@ -18,6 +18,7 @@ function AdminLogin() {
             const response = await axios.post("http://localhost:3000/admin/api/v1/login", data);
 
             localStorage.setItem("token", response.data.token);
+            localStorage.setItem("username", data.username);
 
             navigate("../admin/destinations"); 
         } catch (error) {

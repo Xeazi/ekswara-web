@@ -9,6 +9,7 @@ import TicketReservationPage from "./pages/TicketReservationPage";
 
 import AdminLogin from "./pages/AdminLogin";
 import AdminEvents from "./pages/AdminEvents";
+import AdminEventCreate from "./pages/AdminEventCreate";
 import AdminEventEdit from "./pages/AdminEventEdit";
 import AdminDestinations from "./pages/AdminDestinations";
 
@@ -37,7 +38,8 @@ function App() {
 
       <Route path="/admin/destinations/:destinationId" element={<AdminEvents />} />
 
-      <Route path="/admin/destinations/1/events/new" element={<AdminEventEdit />} />
+      <Route path="/admin/destinations/:destinationId/new" element={<AdminEventCreate />} />
+      <Route path="/admin/destinations/:destinationId/:eventId" element={<AdminEventEdit />} />
 
     </Routes>
   );
