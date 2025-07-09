@@ -49,6 +49,7 @@ function ReservationPage() {
   const [success, setSuccess] = useState(false);
   const [paymentResult, setPaymentResult] = useState(null);
 
+  
   // Load Midtrans Snap script
   useEffect(() => {
     const script = document.createElement("script");
